@@ -15,17 +15,31 @@ import {
 export default function TransactionsPage() {
   const [bookmakers, setBookmakers] = useState([]);
   const [transactions, setTransactions] = useState([]);
+  const [isLoadingBookmakers, setIsLoadingBookmakers] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState({ bookmaker_id: "", type: "deposit", amount: "", notes: "" });
 
   const loadData = async () => {
-    const [bookmakersRes, transactionsRes] = await Promise.all([
-      api.get("/bookmakers"),
-      api.get("/transactions"),
-    ]);
-    setBookmakers(bookmakersRes.data);
-    setTransactions(transactionsRes.data);
-    if (!form.bookmaker_id && bookmakersRes.data.length) {
-      setForm((prev) => ({ ...prev, bookmaker_id: bookmakersRes.data[0].id }));
+    setIsLoadingBookmakers(true);
+    try {
+      const [bookmakersRes, transactionsRes] = await Promise.all([
+        api.get("/bookmakers"),
+        api.get("/transactions"),
+      ]);
+      setBookmakers(bookmakersRes.data);
+      setTransactions(transactionsRes.data);
+      const firstBookmakerId = bookmakersRes.data[0]?.id || "";
+
+      setForm((prev) => ({
+        ...prev,
+        bookmaker_id: bookmakersRes.data.some((bookmaker) => bookmaker.id === prev.bookmaker_id)
+          ? prev.bookmaker_id
+          : firstBookmakerId,
+      }));
+    } catch {
+      toast.error("Falha ao carregar movimentações");
+    } finally {
+      setIsLoadingBookmakers(false);
     }
   };
 
@@ -35,6 +49,21 @@ export default function TransactionsPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (isLoadingBookmakers) {
+      toast.error("Aguarde o carregamento das casas");
+      return;
+    }
+    if (!form.bookmaker_id) {
+      toast.error("Selecione uma casa de apostas válida");
+      return;
+    }
+    if (Number(form.amount) <= 0) {
+      toast.error("Informe um valor maior que zero");
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
       await api.post("/transactions", {
         ...form,
@@ -45,8 +74,12 @@ export default function TransactionsPage() {
       toast.success("Movimentação registrada");
     } catch (error) {
       toast.error(error?.response?.data?.detail || "Erro ao registrar movimentação");
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  const canSubmit = !isLoadingBookmakers && Boolean(form.bookmaker_id) && Number(form.amount) > 0;
 
   return (
     <div className="space-y-6" data-testid="transactions-page">
@@ -55,8 +88,12 @@ export default function TransactionsPage() {
           className="h-9 rounded-md border border-input bg-zinc-950 px-3 text-sm"
           value={form.bookmaker_id}
           onChange={(event) => setForm((prev) => ({ ...prev, bookmaker_id: event.target.value }))}
+          disabled={isLoadingBookmakers || bookmakers.length === 0}
           data-testid="transaction-bookmaker-select"
         >
+          <option value="" disabled>
+            {isLoadingBookmakers ? "Carregando casas..." : "Selecione uma casa"}
+          </option>
           {bookmakers.map((bookmaker) => (
             <option key={bookmaker.id} value={bookmaker.id}>
               {bookmaker.name}
@@ -91,10 +128,16 @@ export default function TransactionsPage() {
           data-testid="transaction-notes-input"
         />
 
-        <Button type="submit" data-testid="transaction-submit-button">
-          Registrar
+        <Button type="submit" disabled={!canSubmit || isSubmitting} data-testid="transaction-submit-button">
+          {isSubmitting ? "Registrando..." : "Registrar"}
         </Button>
       </form>
+
+      {bookmakers.length === 0 && !isLoadingBookmakers && (
+        <p className="text-sm text-yellow-500" data-testid="transaction-bookmaker-empty-warning">
+          Nenhuma casa disponível para movimentação.
+        </p>
+      )}
 
       <section className="panel p-5" data-testid="transactions-table-panel">
         <h3 className="text-2xl uppercase">Histórico de depósitos e saques</h3>

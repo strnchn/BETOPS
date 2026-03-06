@@ -29,20 +29,33 @@ export default function BetsPage() {
   const [bookmakers, setBookmakers] = useState([]);
   const [strategies, setStrategies] = useState([]);
   const [bets, setBets] = useState([]);
+  const [isLoadingInitial, setIsLoadingInitial] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState(defaultForm);
 
   const loadData = async () => {
-    const [bookmakersRes, strategiesRes, betsRes] = await Promise.all([
-      api.get("/bookmakers"),
-      api.get("/strategies"),
-      api.get("/bets"),
-    ]);
-    setBookmakers(bookmakersRes.data);
-    setStrategies(strategiesRes.data);
-    setBets(betsRes.data);
+    setIsLoadingInitial(true);
+    try {
+      const [bookmakersRes, strategiesRes, betsRes] = await Promise.all([
+        api.get("/bookmakers"),
+        api.get("/strategies"),
+        api.get("/bets"),
+      ]);
+      setBookmakers(bookmakersRes.data);
+      setStrategies(strategiesRes.data);
+      setBets(betsRes.data);
 
-    if (!form.bookmaker_id && bookmakersRes.data.length) {
-      setForm((prev) => ({ ...prev, bookmaker_id: bookmakersRes.data[0].id }));
+      const firstBookmakerId = bookmakersRes.data[0]?.id || "";
+      setForm((prev) => ({
+        ...prev,
+        bookmaker_id: bookmakersRes.data.some((bookmaker) => bookmaker.id === prev.bookmaker_id)
+          ? prev.bookmaker_id
+          : firstBookmakerId,
+      }));
+    } catch {
+      toast.error("Falha ao carregar apostas");
+    } finally {
+      setIsLoadingInitial(false);
     }
   };
 
@@ -52,6 +65,17 @@ export default function BetsPage() {
 
   const submitBet = async (event) => {
     event.preventDefault();
+
+    if (isLoadingInitial) {
+      toast.error("Aguarde o carregamento das casas");
+      return;
+    }
+    if (!form.bookmaker_id) {
+      toast.error("Selecione uma casa de apostas válida");
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
       await api.post("/bets", {
         ...form,
@@ -64,8 +88,19 @@ export default function BetsPage() {
       toast.success("Aposta registrada");
     } catch (error) {
       toast.error(error?.response?.data?.detail || "Erro ao registrar aposta");
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  const canSubmit =
+    !isLoadingInitial &&
+    Boolean(form.bookmaker_id) &&
+    Boolean(form.event.trim()) &&
+    Boolean(form.market.trim()) &&
+    Boolean(form.sport.trim()) &&
+    Number(form.odds) > 1 &&
+    Number(form.stake) >= 0;
 
   return (
     <div className="space-y-6" data-testid="bets-page">
@@ -74,8 +109,12 @@ export default function BetsPage() {
           className="h-9 rounded-md border border-input bg-zinc-950 px-3 text-sm"
           value={form.bookmaker_id}
           onChange={(event) => setForm((prev) => ({ ...prev, bookmaker_id: event.target.value }))}
+          disabled={isLoadingInitial || bookmakers.length === 0}
           data-testid="bet-bookmaker-select"
         >
+          <option value="" disabled>
+            {isLoadingInitial ? "Carregando casas..." : "Selecione uma casa"}
+          </option>
           {bookmakers.map((bookmaker) => (
             <option key={bookmaker.id} value={bookmaker.id}>
               {bookmaker.name}
@@ -174,10 +213,21 @@ export default function BetsPage() {
           data-testid="bet-notes-input"
         />
 
-        <Button type="submit" className="md:col-span-4" data-testid="bet-submit-button">
-          Registrar aposta
+        <Button
+          type="submit"
+          className="md:col-span-4"
+          disabled={!canSubmit || isSubmitting}
+          data-testid="bet-submit-button"
+        >
+          {isSubmitting ? "Registrando..." : "Registrar aposta"}
         </Button>
       </form>
+
+      {bookmakers.length === 0 && !isLoadingInitial && (
+        <p className="text-sm text-yellow-500" data-testid="bet-bookmaker-empty-warning">
+          Nenhuma casa disponível para registrar apostas.
+        </p>
+      )}
 
       <section className="panel p-5" data-testid="bets-table-panel">
         <h3 className="text-2xl uppercase">Histórico de apostas</h3>

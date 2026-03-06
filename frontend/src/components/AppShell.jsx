@@ -12,13 +12,13 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
-  { to: "/", label: "Dashboard", icon: BarChart3 },
-  { to: "/bookmakers", label: "Casas", icon: Landmark },
-  { to: "/transactions", label: "Movimentações", icon: Wallet },
-  { to: "/bets", label: "Apostas", icon: CircleDollarSign },
-  { to: "/arbitrage", label: "Arbitragem", icon: Calculator },
-  { to: "/freebet", label: "Freebet", icon: ShieldCheck },
-  { to: "/reports", label: "Relatórios", icon: BarChart3 },
+  { to: "/", label: "Dashboard", icon: BarChart3, testId: "nav-dashboard" },
+  { to: "/bookmakers", label: "Casas", icon: Landmark, testId: "nav-casas" },
+  { to: "/transactions", label: "Movimentações", icon: Wallet, testId: "nav-transactions" },
+  { to: "/bets", label: "Apostas", icon: CircleDollarSign, testId: "nav-bets" },
+  { to: "/arbitrage", label: "Arbitragem", icon: Calculator, testId: "nav-arbitragem" },
+  { to: "/freebet", label: "Freebet", icon: ShieldCheck, testId: "nav-freebet" },
+  { to: "/reports", label: "Relatórios", icon: BarChart3, testId: "nav-reports" },
 ];
 
 export const AppShell = () => {
@@ -47,7 +47,7 @@ export const AppShell = () => {
               <NavLink
                 key={item.to}
                 to={item.to}
-                data-testid={`nav-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                data-testid={item.testId}
                 className={({ isActive }) =>
                   `group flex items-center justify-between rounded-xl border px-4 py-3 transition-all ${
                     isActive
@@ -82,7 +82,7 @@ export const AppShell = () => {
         </div>
       </aside>
 
-      <main className="flex-1 px-4 py-6 md:px-8 lg:px-10" data-testid="main-content-area">
+      <main className="min-w-0 flex-1 px-4 py-6 md:px-8 lg:px-10" data-testid="main-content-area">
         <header className="mb-8 flex flex-wrap items-end justify-between gap-4" data-testid="main-header">
           <div>
             <p className="text-xs uppercase text-zinc-500" data-testid="page-route-indicator">
