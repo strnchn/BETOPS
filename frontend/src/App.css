@@ -1,34 +1,38 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+.panel {
+  border: 1px solid hsl(var(--border));
+  background: linear-gradient(180deg, rgba(24, 24, 27, 0.9) 0%, rgba(9, 9, 11, 0.98) 100%);
+  border-radius: 1rem;
+  box-shadow: 0 0 0 1px rgba(63, 63, 70, 0.3), 0 16px 40px rgba(2, 6, 23, 0.45);
 }
 
-.App-link {
-    color: #61dafb;
+.metric-value {
+  font-family: "JetBrains Mono", monospace;
+  font-variant-numeric: tabular-nums;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.animated-in {
+  animation: revealUp 0.5s ease both;
+}
+
+@keyframes revealUp {
+  from {
+    transform: translateY(14px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

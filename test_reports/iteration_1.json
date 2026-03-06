@@ -1,0 +1,78 @@
+{
+  "summary": "Executed backend pytest regression and frontend Playwright flows for auth, seeded bookmakers, transactions, bets, calculators, dashboard, reports, and navigation using the public URL.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "TransactionsPage form",
+        "issue": "Bookmaker select can stay empty right after account creation/page load; submitting then triggers backend 404 and transaction is not saved.",
+        "selector": "[data-testid='transaction-bookmaker-select'], [data-testid='transaction-submit-button']",
+        "priority": "HIGH"
+      },
+      {
+        "component": "BetsPage form",
+        "issue": "Bookmaker select can be empty during early interaction; first POST /api/bets returns 404 and bet is not saved in table.",
+        "selector": "[data-testid='bet-bookmaker-select'], [data-testid='bet-submit-button']",
+        "priority": "HIGH"
+      }
+    ],
+    "integration_issues": [
+      {
+        "flow": "Transaction registration",
+        "issue": "Observed intermittent POST /api/transactions -> 404 from frontend flow while backend tests for same endpoint pass; RCA points to empty bookmaker_id on early submit race.",
+        "affected_selectors": [
+          "[data-testid='transaction-bookmaker-select']",
+          "[data-testid='transaction-submit-button']"
+        ]
+      },
+      {
+        "flow": "Bet registration",
+        "issue": "Observed POST /api/bets -> 404 in UI flow; subsequent retry succeeds once bookmaker is populated.",
+        "affected_selectors": [
+          "[data-testid='bet-bookmaker-select']",
+          "[data-testid='bet-submit-button']"
+        ]
+      }
+    ],
+    "design_issues": [
+      {
+        "screen": "Dashboard and Reports charts",
+        "issues": [
+          "Console warnings from Recharts: width/height = -1 in ResponsiveContainer during render cycle.",
+          "Reports table area can render empty initially even after interactions, reducing data confidence for users."
+        ]
+      }
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_betops_api.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Disable Transactions submit until bookmaker_id is set and options are loaded.",
+    "Disable Bets submit until bookmaker_id is set and options are loaded.",
+    "Show explicit inline/sonner error when bookmaker selection is invalid to avoid silent perceived failures.",
+    "Stabilize chart container sizing to remove Recharts -1 width/height warnings."
+  ],
+  "critical_code_review_comments": [
+    "UI forms rely on async bookmaker fetch but submit buttons remain enabled before required state is ready, causing avoidable 404 integration failures.",
+    "Keep data-testid slug generation stable for accented labels (current auto-slugging with accents creates brittle selectors like nav-relat-rios).",
+    "Consider explicit loading/empty states on reports tables so users can distinguish 'no data yet' vs failed load."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_betops_api.py",
+    "/app/test_reports/iteration_1.json"
+  ],
+  "success_rate": {
+    "backend": "100%",
+    "frontend": "70%"
+  },
+  "seed_data_creation": "Created multiple QA users via /api/auth/register during UI and backend tests (qa_*@example.com).",
+  "retest_needed": true,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Backend suite is green (7/7). Frontend route coverage done, but transaction/bet submit race issue reproduced across runs with backend logs proving intermittent 404 from UI. Avoid re-running same selector loop; focus on fixing submit gating and retest those two forms first.",
+  "rca of the issue": "Reproduction: register new account -> navigate quickly to Transactions or Bets -> submit before bookmaker select is reliably populated -> API receives empty/invalid bookmaker_id -> backend ownership check returns 404. Mitigation: make bookmaker_id required in UI state, disable submit while loading options, and prevent submit when selected option is empty."
+}

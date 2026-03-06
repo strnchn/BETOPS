@@ -1,54 +1,67 @@
-import { useEffect } from "react";
 import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
+import { Navigate, Route, BrowserRouter, Routes } from "react-router-dom";
+import { Toaster } from "sonner";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { AppShell } from "@/components/AppShell";
+import LoginPage from "@/pages/LoginPage";
+import DashboardPage from "@/pages/DashboardPage";
+import BookmakersPage from "@/pages/BookmakersPage";
+import TransactionsPage from "@/pages/TransactionsPage";
+import BetsPage from "@/pages/BetsPage";
+import ArbitragePage from "@/pages/ArbitragePage";
+import FreebetPage from "@/pages/FreebetPage";
+import ReportsPage from "@/pages/ReportsPage";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
-
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
-
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
-  return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
+const ProtectedRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+  if (loading) {
+    return (
+      <div className="min-h-screen grid place-items-center" data-testid="app-loading-screen">
+        <p className="text-zinc-300">Carregando plataforma...</p>
+      </div>
+    );
+  }
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
 };
 
-function App() {
+const MainRoutes = () => (
+  <Routes>
+    <Route path="/login" element={<LoginPage />} />
+    <Route
+      path="/"
+      element={
+        <ProtectedRoute>
+          <AppShell />
+        </ProtectedRoute>
+      }
+    >
+      <Route index element={<DashboardPage />} />
+      <Route path="bookmakers" element={<BookmakersPage />} />
+      <Route path="transactions" element={<TransactionsPage />} />
+      <Route path="bets" element={<BetsPage />} />
+      <Route path="arbitrage" element={<ArbitragePage />} />
+      <Route path="freebet" element={<FreebetPage />} />
+      <Route path="reports" element={<ReportsPage />} />
+    </Route>
+    <Route path="*" element={<Navigate to="/" replace />} />
+  </Routes>
+);
+
+export default function App() {
   return (
-    <div className="App">
+    <AuthProvider>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
+        <MainRoutes />
       </BrowserRouter>
-    </div>
+      <Toaster
+        theme="dark"
+        position="top-right"
+        richColors
+        toastOptions={{ duration: 2600 }}
+      />
+    </AuthProvider>
   );
 }
-
-export default App;
