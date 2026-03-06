@@ -1,0 +1,186 @@
+{
+  "identity": {
+    "name": "E1",
+    "role": "The Anti-AI Designer",
+    "mission": "Create a sports betting SaaS that feels like a Bloomberg Terminal for professional gamblers—dense, dark, and ruthlessly efficient.",
+    "principles": [
+      "Fusion over Imitation: Mix Fintech precision with Sports broadcast energy.",
+      "Emotion First: The user should feel like a 'Tactical Operator' or 'Quant Trader'.",
+      "Content is King: Data is the hero. Charts and numbers must be legible at a glance.",
+      "Negative Space: Use 'Bento' grids to separate dense data clusters.",
+      "Contrast: High-contrast neon against deep matte black for immediate signal recognition."
+    ]
+  },
+  "typography": {
+    "font_family_heading": "\"Barlow Condensed\", \"Oswald\", sans-serif",
+    "font_family_body": "\"Manrope\", \"Inter\", sans-serif",
+    "font_family_mono": "\"JetBrains Mono\", \"Fira Code\", monospace",
+    "scale": {
+      "h1": "text-5xl font-black tracking-tight uppercase",
+      "h2": "text-3xl font-bold tracking-tight uppercase",
+      "h3": "text-xl font-semibold tracking-wide",
+      "body": "text-base font-normal leading-relaxed",
+      "mono_lg": "text-lg font-mono tracking-tight",
+      "mono_sm": "text-xs font-mono opacity-80"
+    },
+    "usage": {
+      "headings": "Use Barlow Condensed for all page titles and widget headers. Uppercase often works best here for the 'Scoreboard' feel.",
+      "numbers": "ALWAYS use JetBrains Mono for Odds, Stakes, financial amounts, and live timers. Tabular nums are mandatory.",
+      "ui": "Use Manrope for labels, buttons, and navigation."
+    }
+  },
+  "colors": {
+    "theme": "dark",
+    "palette": {
+      "background": "#09090b",
+      "surface": "#18181b",
+      "surface_highlight": "#27272a",
+      "border": "#27272a",
+      "primary": "#3b82f6",
+      "primary_foreground": "#ffffff",
+      "success": "#22c55e",
+      "success_glow": "0 0 10px rgba(34, 197, 94, 0.5)",
+      "danger": "#ef4444",
+      "danger_glow": "0 0 10px rgba(239, 68, 68, 0.5)",
+      "warning": "#eab308",
+      "text_primary": "#fafafa",
+      "text_secondary": "#a1a1aa",
+      "text_muted": "#52525b"
+    },
+    "semantic": {
+      "profit": "text-green-500",
+      "loss": "text-red-500",
+      "neutral": "text-gray-400",
+      "brand_accent": "bg-blue-600 hover:bg-blue-700 text-white"
+    }
+  },
+  "layout": {
+    "grid_system": "Bento Grid (CSS Grid)",
+    "container_padding": "p-4 md:p-8 lg:p-12",
+    "spacing_scale": {
+      "section_gap": "gap-8",
+      "widget_gap": "gap-4",
+      "internal_padding": "p-6"
+    },
+    "structure": {
+      "dashboard": "grid grid-cols-1 md:grid-cols-4 lg:grid-cols-12 gap-4 auto-rows-[minmax(180px,auto)]",
+      "sidebar": "Fixed left, w-64, border-r border-border bg-background/95 backdrop-blur",
+      "card": "bg-card border border-border rounded-xl shadow-sm hover:border-primary/50 transition-colors duration-300"
+    }
+  },
+  "components": {
+    "Button": {
+      "default": "rounded-full font-medium tracking-wide transition-all active:scale-95",
+      "primary": "bg-primary text-primary-foreground shadow-[0_0_15px_rgba(59,130,246,0.5)] hover:shadow-[0_0_25px_rgba(59,130,246,0.6)]",
+      "secondary": "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+      "outline": "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
+      "ghost": "hover:bg-accent hover:text-accent-foreground"
+    },
+    "Card": {
+      "base": "rounded-xl border border-zinc-800 bg-zinc-900/50 backdrop-blur-sm text-card-foreground shadow-sm",
+      "header": "flex flex-col space-y-1.5 p-6",
+      "content": "p-6 pt-0",
+      "interactive": "hover:bg-zinc-900/80 cursor-pointer transition-colors"
+    },
+    "Input": {
+      "base": "flex h-10 w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    },
+    "Badge": {
+      "base": "inline-flex items-center rounded-sm border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+      "win": "border-transparent bg-green-500/15 text-green-500 hover:bg-green-500/25",
+      "loss": "border-transparent bg-red-500/15 text-red-500 hover:bg-red-500/25",
+      "pending": "border-transparent bg-yellow-500/15 text-yellow-500 hover:bg-yellow-500/25"
+    }
+  },
+  "visual_enhancers": {
+    "glassmorphism": "backdrop-blur-xl bg-black/40 border-white/5",
+    "neon_glow": "shadow-[0_0_10px_rgba(var(--color-primary),0.3)]",
+    "grid_lines": "bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]",
+    "noise": "opacity-5 pointer-events-none fixed inset-0 z-50 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"
+  },
+  "charts": {
+    "library": "Recharts",
+    "theme": {
+      "background": "transparent",
+      "grid_color": "#3f3f46",
+      "tooltip_bg": "#18181b",
+      "tooltip_border": "#27272a"
+    },
+    "palettes": {
+      "profit_trend": ["#22c55e", "#3b82f6"],
+      "win_loss": ["#22c55e", "#ef4444"]
+    }
+  },
+  "data_models": {
+    "Users": "id, email, password_hash, full_name, created_at, preferences (json)",
+    "Bookmakers": "id, name, logo_url, is_active",
+    "Transactions": "id, user_id, bookmaker_id, type (deposit/withdrawal), amount, date, notes",
+    "Strategies": "id, user_id, name, description, target_roi",
+    "Bets": "id, user_id, bookmaker_id, strategy_id, sport, market, selection, odds, stake, status (pending/won/lost/void/cashout), return_amount, profit, date_placed, date_settled, notes, bet_type (single/multiple/arbitrage/freebet)",
+    "BankrollHistory": "id, user_id, date, total_balance, total_profit"
+  },
+  "blueprint": {
+    "phase_1_setup": {
+      "title": "Core Foundation",
+      "steps": [
+        "Initialize Tailwind with 'Performance Pro' colors and fonts.",
+        "Install 'lucide-react' for icons.",
+        "Create 'Layout' component with Sidebar and Header.",
+        "Implement 'ThemeToggle' (Force Dark Mode default)."
+      ]
+    },
+    "phase_2_dashboard": {
+      "title": "Command Center",
+      "features": [
+        "KPI Cards: Total Profit (Green/Red), ROI %, Win Rate %.",
+        "Main Chart: Bankroll Growth (Area Chart).",
+        "Recent Activity: Compact table of last 5 bets."
+      ]
+    },
+    "phase_3_betting_engine": {
+      "title": "Tactical Operations",
+      "features": [
+        "Bet Logger Form: Inputs for Odds, Stake, Bookmaker (Select), Sport.",
+        "Calculators: Arbitrage & Freebet (SNR/SR) embedded widgets.",
+        "Validation: Auto-calculate potential return."
+      ]
+    },
+    "phase_4_analytics": {
+      "title": "Debriefing Room",
+      "features": [
+        "Bookmaker Breakdown: Bar chart of profit by Bookie.",
+        "Strategy Performance: Table showing ROI per strategy.",
+        "Advanced Reports: Monthly P&L Heatmap."
+      ]
+    }
+  },
+  "math_formulas": {
+    "arbitrage": {
+      "stake_a": "(total_bankroll / odd_a) / ((1/odd_a) + (1/odd_b))",
+      "stake_b": "(total_bankroll / odd_b) / ((1/odd_a) + (1/odd_b))",
+      "guaranteed_profit": "(stake_a * odd_a) - total_bankroll"
+    },
+    "freebet_snr": {
+      "description": "Stake Not Returned - maximize profit from free bet",
+      "lay_stake": "(back_stake * (back_odd - 1)) / (lay_odd - commission)",
+      "profit": "(back_stake * (back_odd - 1)) - (lay_stake * (lay_odd - 1))"
+    },
+    "bankroll": {
+      "current": "(total_deposits - total_withdrawals) + net_profit"
+    }
+  },
+  "image_urls": {
+    "login_bg": "https://images.unsplash.com/photo-1578344151866-f13ecd6b615a?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "user_avatar_placeholder": "https://images.unsplash.com/photo-1557844681-657a68143c00?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "hero_abstract": "https://images.unsplash.com/photo-1764760764956-d3ad5f37150b?crop=entropy&cs=srgb&fm=jpg&q=85"
+  },
+  "bookmakers_list": [
+    "BETANO", "SUPERBET", "MAGICJACKPOT", "SUPER", "REI DO PITACO", "PITACO", "SPORTINGBET", "BETBOO", "CAESARS", "BETNACIONAL", "MR. JACK BET", "KTO", "BETSSON", "GALERA.BET", "F12.BET", "LUVA.BET", "BRASILBET", "SPORTYBET", "LANCEBET", "ESTRELABET", "REALS", "UX", "NETPIX", "BETFAIR", "7GAMES", "BETÃO", "R7", "NOVIBET", "SEGURO BET", "KING PANDA", "9F", "6R", "BET.APP", "IJOGO", "FOGO777", "P9", "BET365", "APOSTA GANHA", "BRAZINO777", "4PLAY", "PAGOL", "SEUBET", "H2 BET", "VBET", "VIVARO", "CASA DE APOSTAS", "BET SUL", "JOGO ONLINE", "BETFAST", "FAZ1BET", "TIVOBET", "SUPREMABET", "MAXIMABET", "XPBET", "BETESPORTE", "LANCE DE SORTE", "BETMGM", "MGM", "BETSPEED", "BRAVO", "TRADICIONAL", "APOSTATUDO", "SORTE ONLINE", "LOTTOLAND", "ARENAPLUS", "PIXBET", "FLABET", "BET DA SORTE", "APOSTOU", "B1 BET", "BRBET", "BET GORILLAS", "BET BUFFALOS", "BET FALCONS", "BATEU BET", "HANZBET", "ESPORTIVA BET", "BETWARRIOR", "SORTENABET", "BETOU", "BETFUSION", "BANDBET", "AFUN", "AI", "6Z", "BLAZE", "JONBET", "BET7K", "CASSINOPIX", "BET VERA", "BAÚ BINGO", "TELE SENA BET", "BET DO MILHÃO", "VERTBET", "CBET", "FANBIT", "UPBETBR", "9D", "WJCASINO", "ALFA.BET", "BET4", "APOSTA BET", "FAZ O BET", "BOLSA DE APOSTA", "FULLTBET", "BETBRA", "PINNACLE", "MATCHBOOK", "BETESPECIAL", "BETBOOM", "APOSTA1", "APOSTAMAX", "GINGABET", "QGBET", "VIVASORTE", "BACANAPLAY", "PLAYUZU", "BETCOPA", "BRASIL DA SORTE", "FYBET", "MULTIBET", "RICOBET", "BRXBET", "STAKE", "BETCAIXA", "MEGABET", "XBET CAIXA", "FAZOBETAÍ", "OLEYBET", "BETPARK", "MERIDIANBET", "VERSUSBET", "VS - VERSUS", "LUCK.BET", "1 PRA 1", "STARTBET", "ESPORTE 365", "BET AKI", "JOGO DE OURO", "LÍDERBET", "GERALBET", "B2XBET", "BULLSBET", "JOGÃO", "BET.BET", "DONALDBET", "RIVALO", "A247", "HILGARDO", "HILGARDO GAMING", "MCGAMES", "MONTECARLOSBET", "MONTECARLOS"
+  ],
+  "universal_guidelines": [
+    "Use data-testid for ALL interactive elements (e.g., 'submit-bet-btn', 'odds-input').",
+    "Do not use gradients for backgrounds, use solid Zinc-950 or noise textures.",
+    "Ensure 100% responsive design - Tables must scroll horizontally on mobile.",
+    "Use 'sonner' for all success/error notifications."
+  ]
+}
