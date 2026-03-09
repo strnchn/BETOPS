@@ -786,6 +786,10 @@ async def odds_performance(current_user: UserPublic = Depends(get_current_user))
     return report
 
 
+@app.get("/api/health")
+async def health_check():
+    return {"status": "ok"}
+
 app.include_router(api_router)
 
 app.add_middleware(
